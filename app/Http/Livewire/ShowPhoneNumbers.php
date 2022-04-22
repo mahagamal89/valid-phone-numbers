@@ -4,10 +4,12 @@ namespace App\Http\Livewire;
 
 use App\Services\Phone;
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Services\State;
 
 class ShowPhoneNumbers extends Component
 {
+    use WithPagination;
 
     /**
      * @var string
@@ -27,7 +29,7 @@ class ShowPhoneNumbers extends Component
     public function render()
     {
         return view('livewire.show-phone-numbers', [
-            'data' => $this->getData(),
+            'data' => $this->getData()->paginate(10),
             'countries' => $this->listAllCountries(),
         ])
         ->extends('layouts.app')
@@ -43,7 +45,7 @@ class ShowPhoneNumbers extends Component
     {
         $phones = (new Phone())->build();
         $data = collect((new State($phones))->isValid());
-        
+
         if (!empty($this->selectedCountry) || !empty($this->selectedPhoneState)) {
             return $this->filter($data);
         }
@@ -84,5 +86,23 @@ class ShowPhoneNumbers extends Component
 
     }
 
+    /**
+     * Reset pagination before selected country property is updated.
+     *
+     * @return void
+     */
+    public function updatingSelectedCountry()
+    {
+        $this->resetPage();
+    }
+
+    /**
+     * Reset pagination before selected phone state property is updated.
+     *
+     * @return void
+     */
+    public function updatingSelectedPhoneState()
+    {
+        $this->resetPage();
     }
 }
