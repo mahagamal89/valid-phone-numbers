@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->app->bind('phoneNumbersValidator', function ($app) {
+            return $app->config->get('countries.phone_numbers_validator') ?: 'No such a phone number exists.';
+        });
+
         //
     }
 }
