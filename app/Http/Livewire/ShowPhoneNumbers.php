@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Services\Phone;
+use App\Services\State;
 use Livewire\Component;
 
 class ShowPhoneNumbers extends Component
@@ -29,6 +30,8 @@ class ShowPhoneNumbers extends Component
      */
     public function getData()
     {
-        return (new Phone())->build();
+        $phones = (new Phone())->build();
+        
+        return (new State($phones))->isValid();
     }
 }
